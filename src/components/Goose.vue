@@ -32,15 +32,6 @@ export default {
         }
     },
     mounted() {
-        // const gooseSoundPlayer = new Tone.Player("https://res.cloudinary.com/jlengstorf/video/upload/q_auto/v1569957993/honk-sound.mp3").sync().start(0);
-        // const pitchShift = new Tone.PitchShift({
-        //     pitch: this.modulation
-        // }).toMaster();
-        // gooseSoundPlayer.connect(pitchShift)
-        // console.log(this.modulation)
-        // Tone.Buffer.on('load', () => {
-        //     console.log('Ready for play') // eslint-disable-line
-        // });
     }
 }
 </script>
