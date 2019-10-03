@@ -2,7 +2,6 @@
   <div id="goose">
     <button
       class="btn"
-      :keyup="keyHandler"
       :class="{ 'btn--active': buttonActive }"
       @click="playGooseSound(modulation)"
     >
