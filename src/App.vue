@@ -1,8 +1,14 @@
 <template>
   <div id="app">
-    <div id="gooseContainer" v-for="note in notes" v-bind:key="note">
-    <Goose :modulation="note"></Goose>
-    {{ note }}
+    <div
+      id="gooseContainer"
+    >
+      <Goose
+        v-for="note in notes"
+        :key="note"
+        :modulation="note"
+      ></Goose>
+      {{ note }}
     </div>
   </div>
 </template>
@@ -11,19 +17,21 @@
 import Goose from './components/Goose.vue'
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
-    Goose
+    Goose,
   },
   data() {
     return {
-      notes: ['D2','F2','A2','C3','D3','F3','A3']
+      notes: ['B2', 'C3', 'D3', 'E3', 'F3', 'G3', 'A3'],
     }
-  }
+  },
 }
 
 </script>
 
 <style>
-
+#gooseContainer {
+  display: flex;
+}
 </style>
