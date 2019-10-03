@@ -1,17 +1,23 @@
 <template>
   <div id="goose">
-    <button @click="playGooseSound(modulation)">
-      I am a picture of a goose
+    <button
+      :keyup="keyHandler"
+      @click="playGooseSound(modulation)"
+    >
+      Goose {{ keyboardkey }}
     </button>
   </div>
 </template>
 <script>
 import Tone from 'tone'
 
-
 export default {
   props: {
     modulation: {
+      type: String,
+      default: '',
+    },
+    keyboardkey: {
       type: String,
       default: '',
     },
@@ -21,7 +27,11 @@ export default {
       sound: 'hello',
     }
   },
-  mounted() {
+  created() {
+    window.addEventListener('keydown', this.keyHandler)
+  },
+  beforeDestroy() {
+    window.removeEventListener('keydown', this.keyHandler)
   },
   methods: {
     playGooseSound(modulation) {
@@ -31,6 +41,12 @@ export default {
         // sampler will repitch the closest sample
         sampler.triggerAttack(modulation)
       })).toMaster()
+    },
+    keyHandler(event) {
+      // ideally, I don't think each Goose component should be adding its own event listeners
+      if (event.key === this.keyboardkey) {
+        this.playGooseSound(this.modulation)
+      }
     },
   },
 }
