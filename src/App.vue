@@ -1,28 +1,29 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div id="gooseContainer" v-for="note in notes" v-bind:key="note">
+    <Goose :modulation="note"></Goose>
+    {{ note }}
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Goose from './components/Goose.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    Goose
+  },
+  data() {
+    return {
+      notes: ['-36','-24','-12','0','12','24','36']
+    }
   }
 }
+
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
