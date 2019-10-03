@@ -8,18 +8,25 @@
         :key="note.note"
         :keyboardkey="note.keyboardKey"
         :modulation="note.note"
+        @goose-note="addNoteToRecord"
       ></Goose>
+    </div>
+    <div id="container">
+      <record :notelist="testlist">
+      </record>
     </div>
   </div>
 </template>
 
 <script>
 import Goose from './components/Goose.vue'
+import Record from './components/Record.vue'
 
 export default {
   name: 'App',
   components: {
     Goose,
+    Record,
   },
   data() {
     return {
@@ -32,7 +39,13 @@ export default {
         G3: { note: 'G3', keyboardKey: 'h' },
         A3: { note: 'A3', keyboardKey: 'j' },
       },
+      testlist: [],
     }
+  },
+  methods: {
+    addNoteToRecord(event) {
+      this.testlist.push(event)
+    },
   },
 }
 

@@ -4,7 +4,7 @@
       :id="keyboardkey"
       class="btn"
       :class="{ 'btn--active': buttonActive }"
-      @click="honk(modulation)"
+      @click="honk"
     >
       Goose {{ keyboardkey }}
     </button>
@@ -36,9 +36,10 @@ export default {
     window.removeEventListener('keydown', this.keyHandler)
   },
   methods: {
-    honk(modulation) {
+    honk() {
+      this.$emit('goose-note', this.modulation)
       this.setButtonActive()
-      return HonkHelper.honk(modulation)
+      return HonkHelper.honk(this.modulation)
     },
     setButtonActive() {
       // this is gross - so disgusting, but I don't have access to an
