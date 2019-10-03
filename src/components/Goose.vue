@@ -1,16 +1,17 @@
 <template>
   <div id="goose">
     <button
+      :id="keyboardkey"
       class="btn"
       :class="{ 'btn--active': buttonActive }"
-      @click="playGooseSound(modulation)"
+      @click="honk(modulation)"
     >
       Goose {{ keyboardkey }}
     </button>
   </div>
 </template>
 <script>
-import Tone from 'tone'
+import HonkHelper from '../services/Sound'
 
 export default {
   props: {
@@ -25,7 +26,6 @@ export default {
   },
   data() {
     return {
-      sound: 'hello',
       buttonActive: false,
     }
   },
@@ -36,20 +36,20 @@ export default {
     window.removeEventListener('keydown', this.keyHandler)
   },
   methods: {
-    playGooseSound(modulation) {
+    honk(modulation) {
+      this.setButtonActive()
+      return HonkHelper.honk(modulation)
+    },
+    setButtonActive() {
+      // this is gross - so disgusting, but I don't have access to an
+      // "is playing" variable
       this.buttonActive = true
-      const sampler = new Tone.Sampler({
-        E3: 'https://res.cloudinary.com/jlengstorf/video/upload/q_auto/v1569957993/honk-sound.mp3',
-      }, (() => {
-        // sampler will repitch the closest sample
-        sampler.triggerAttack(modulation)
-        this.buttonActive = false
-      })).toMaster()
+      setTimeout(() => { this.buttonActive = false }, 200)
     },
     keyHandler(event) {
       // ideally, I don't think each Goose component should be adding its own event listeners
       if (event.key === this.keyboardkey) {
-        this.playGooseSound(this.modulation)
+        this.honk(this.modulation)
       }
     },
   },
