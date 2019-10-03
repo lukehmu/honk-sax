@@ -1,7 +1,9 @@
 <template>
   <div id="goose">
     <button
+      class="btn"
       :keyup="keyHandler"
+      :class="{ 'btn--active': buttonActive }"
       @click="playGooseSound(modulation)"
     >
       Goose {{ keyboardkey }}
@@ -25,6 +27,7 @@ export default {
   data() {
     return {
       sound: 'hello',
+      buttonActive: false,
     }
   },
   created() {
@@ -35,11 +38,13 @@ export default {
   },
   methods: {
     playGooseSound(modulation) {
+      this.buttonActive = true
       const sampler = new Tone.Sampler({
         E3: 'https://res.cloudinary.com/jlengstorf/video/upload/q_auto/v1569957993/honk-sound.mp3',
       }, (() => {
         // sampler will repitch the closest sample
         sampler.triggerAttack(modulation)
+        this.buttonActive = false
       })).toMaster()
     },
     keyHandler(event) {
@@ -51,3 +56,18 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.btn {
+  border: none;
+  color: white;
+  margin: 1rem;
+  padding: 0;
+  background-color: black;
+  width: 6rem;
+  height: 2rem;
+}
+.btn--active {
+    background-color: gray;
+}
+</style>

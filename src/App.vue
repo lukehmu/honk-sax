@@ -60,7 +60,10 @@ export default {
 </script>
 
 <style>
-#gooseContainer {
+
+@media screen and (min-width: 900px) {
+  #gooseContainer {
   display: flex;
+}
 }
 </style>
