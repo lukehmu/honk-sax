@@ -4,7 +4,8 @@
       :id="keyboardkey"
       class="btn"
       :class="{ 'btn--active': buttonActive }"
-      @click="honk"
+      @mousedown="honk"
+      @mouseup="toggleButton"
     >
       Goose {{ keyboardkey }}
     </button>
@@ -30,27 +31,35 @@ export default {
     }
   },
   created() {
-    document.addEventListener('keydown', this.keyHandler)
+    document.addEventListener('keydown', this.keyDownHandler)
+    document.addEventListener('keyup', this.keyUpHandler)
   },
   beforeDestroy() {
-    document.removeEventListener('keydown', this.keyHandler)
+    document.removeEventListener('keydown', this.keyDownHandler)
+    document.removeEventListener('keyup', this.keyUpHandler)
   },
   methods: {
     honk() {
       this.$emit('goose-note', this.modulation)
-      this.setButtonActive()
+      this.toggleButton()
       return HonkHelper.honk(this.modulation)
     },
-    setButtonActive() {
-      // this is gross - so disgusting, but I don't have access to an
-      // "is playing" variable
-      this.buttonActive = true
-      setTimeout(() => { this.buttonActive = false }, 200)
+    toggleButton() {
+      if (this.buttonActive === false) {
+        this.buttonActive = true
+      } else {
+        this.buttonActive = false
+      }
     },
-    keyHandler(event) {
+    keyDownHandler(event) {
       // ideally, I don't think each Goose component should be adding its own event listeners
       if (event.key === this.keyboardkey) {
         this.honk(this.modulation)
+      }
+    },
+    keyUpHandler(event) {
+      if (event.key === this.keyboardkey) {
+        this.toggleButton()
       }
     },
   },
