@@ -30,10 +30,10 @@ export default {
     }
   },
   created() {
-    window.addEventListener('keydown', this.keyHandler)
+    document.addEventListener('keydown', this.keyHandler)
   },
   beforeDestroy() {
-    window.removeEventListener('keydown', this.keyHandler)
+    document.removeEventListener('keydown', this.keyHandler)
   },
   methods: {
     honk() {

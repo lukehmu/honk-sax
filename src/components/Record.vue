@@ -1,16 +1,19 @@
 <template>
   <div class="recording">
+    <button @click="honkArray">
+      {{ buttonText }}
+    </button>
+    <button @click="stopHonk">
+      STOP
+    </button>
     <ul>
       <li
-        v-for="note in notelist"
-        :key="note"
+        v-for="(note, index) in notelist"
+        :key="index"
       >
         {{ note }}
       </li>
     </ul>
-    <button @click="honkArray">
-      {{ buttonText }}
-    </button>
   </div>
 </template>
 <script>
@@ -36,6 +39,9 @@ export default {
       }
       this.buttonText = 'Nothing to play back'
       return 'done'
+    },
+    stopHonk() {
+      return HonkHelper.stopHonk()
     },
   },
 }
