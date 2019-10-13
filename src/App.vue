@@ -20,6 +20,7 @@
   import Goose from './components/Goose.vue'
   import Record from './components/Record.vue'
   import MidiConnect from './services/connectToMidi'
+  import HonkHelper from './services/Sound'
 
   export default {
     name: 'App',
@@ -41,17 +42,99 @@
           A3: { note: 'A3', keyboardKey: 'j' },
         },
         testlist: [],
+        midiNote: '',
       }
     },
     mounted() {
       // Initialise connection to midi (if available)
-      MidiConnect.connectToMidi();
+      this.connectToMidi();
     },
     methods: {
       addNoteToRecord(event) {
         this.testlist.push(event)
       },
+      honk(note) {
+        this.$emit('goose-note', note)
+        // this.toggleButton()
+        return HonkHelper.honk(note)
+      },
+      connectToMidi() {
+        // Bind functions to 'this'
+        const boundOnMIDISuccess = this.onMIDISuccess.bind(this)
+        const boundOnMIDIFailure = this.onMIDIFailure.bind(this)
+
+        // request MIDI access
+        if (navigator.requestMIDIAccess) {
+          navigator.requestMIDIAccess({
+            sysex: false, // this defaults to 'false' and we won't be covering sysex in this article.
+          }).then(boundOnMIDISuccess, boundOnMIDIFailure)
+        } else {
+          alert('No MIDI support in your browser.')
+        }
+      },
+      // midi functions
+      onMIDISuccess(midiAccess) {
+        // when we get a succesful response, run this code
+        // console.log('MIDI Access Object', midiAccess)
+
+        const midi = midiAccess
+
+        const inputs = midi.inputs.values()
+
+        for (let input = inputs.next(); input && !input.done; input = inputs.next()) {
+          input.value.onmidimessage = this.onMIDIMessage
+        }
+      },
+      // Outputs the MIDI message
+      onMIDIMessage(message) {
+        const { data } = message
+
+        const note = data[1]
+        // return note
+        this.midiNote = note
+      },
+      onMIDIFailure(e) {
+        // when we get a failed response, run this code
+        console.log(`No access to MIDI devices or your browser doesn't support WebMIDI API. Please use WebMIDIAPIShim ${e}`)
+      },
+      convertMidiNote(midiNote) {
+        let newNote = '';
+        switch (midiNote) {
+          case 48:
+            newNote = 'C3'
+            break
+          case 50:
+            newNote = 'D3'
+            break
+          case 52:
+            newNote = 'E3'
+            break
+          case 53:
+            newNote = 'F3'
+            break
+          case 55:
+            newNote = 'G3'
+            break
+          case 57:
+            newNote = 'A3'
+            break
+          case 59:
+            newNote = 'B3'
+            break
+          case 60:
+            newNote = 'C4'
+            break
+          default:
+            return
+        }
+        this.honk(newNote)
+      },
     },
+    watch: {
+      midiNote: function() {
+        this.convertMidiNote(this.midiNote)
+      }
+    }
   }
 </script>
 

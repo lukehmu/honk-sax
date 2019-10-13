@@ -32,7 +32,7 @@ export default {
     const { data } = message
 
     const note = data[1]
-    console.log(note)
+    // console.log(note)
     return note
   },
   onMIDIFailure(e) {
