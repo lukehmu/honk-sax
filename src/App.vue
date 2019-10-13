@@ -56,6 +56,7 @@
       honk(note) {
         this.$emit('goose-note', note)
         // this.toggleButton()
+        this.midiNote = ''
         return HonkHelper.honk(note)
       },
       connectToMidi() {
@@ -88,10 +89,13 @@
       // Outputs the MIDI message
       onMIDIMessage(message) {
         const { data } = message
+        // console.log('message', message)
 
         const note = data[1]
-        // return note
-        this.midiNote = note
+        const velocity = data[2]
+        // For some reason the press is logged as 2 events: velocity is recorded in the first
+        // And is '0' in the second, but I only want to play the note on the first event
+        if(velocity != 0) this.midiNote = note
       },
       onMIDIFailure(e) {
         // when we get a failed response, run this code
