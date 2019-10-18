@@ -12,7 +12,23 @@
   </div>
 </template>
 <script>
+import WebMidi from 'webmidi'
 import HonkHelper from '../services/Sound'
+
+WebMidi.enable((err) => {
+  if (err) {
+    console.log('WebMidi could not be enabled.', err)
+  }
+
+  // Viewing available inputs and outputs
+  console.log(WebMidi.inputs)
+  const input = WebMidi.inputs[0]
+
+  input.addListener('noteon', 'all',
+    (e) => {
+      console.log(`Received 'noteon' message (${e.note.name}${e.note.octave}).`)
+    })
+})
 
 export default {
   props: {
